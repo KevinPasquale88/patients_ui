@@ -1,0 +1,29 @@
+<header class="p-3 mb-2">
+    <blockquote class="blockquote text-center">
+        <h1 class="display-2">{{titlecop}}</h1>
+    </blockquote>
+</header>
+<p></p>
+<section>
+    <form>
+        <div class="form-group">
+            <label for="nameInsert" class="col-sm-2 col-form-label"><b>NOME</b></label>
+            <div class="col-sm">
+                <input type="text" class="form-control" id="nameInsert" placeholder="Inserisci nome" [(ngModel)]="name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="surnameInsert" class="col-sm-2 col-form-label"><b>COGNOME</b></label>
+            <div class="col-sm">
+                <input type="text" class="form-control" id="surnameInsert" placeholder="Inserisci cognome"
+                    [(ngModel)]="surname">
+            </div>
+        </div>
+        <p></p>
+        <p></p>
+        <button type="submit" class="btn btn-secondary btn-lg btn-block" (click)="onSubmit()">Submit</button>
+    </form>
+    <div *ngIf="noresult" class="alert alert-warning" role="alert">
+        Non ci sono pazienti per i dati inseriti
+    </div>
+</section>

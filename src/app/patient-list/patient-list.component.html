@@ -1,0 +1,35 @@
+<header class="p-3 mb-2">
+    <blockquote class="blockquote text-center">
+        <h1 class="display-2">{{titlecop}}</h1>
+    </blockquote>
+</header>
+<p></p>
+<section>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">NOME</th>
+                <th scope="col">COGNOME</th>
+                <th scope="col">CODICE FISCALE</th>
+                <th scope="col">DATA DI NASCITA</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let patient of patients; let cont=index">
+                <th scope="row">{{cont+1}}</th>
+                <td>{{patient.name}}</td>
+                <td>{{patient.surname}}</td>
+                <td>{{patient.fiscalcode}}</td>
+                <td>{{patient.birthday}}</td>
+                <td>
+                    <button type="submit" type="button" class="btn btn-lg btn-outline-dark" (click)="selectPatient(patient)">SELEZIONA</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-secondary btn-lg btn-block" (click)="back()">torna indietro</button>
+
+</section>

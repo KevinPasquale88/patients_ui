@@ -1,0 +1,21 @@
+<header class="p-3 mb-2">
+    <blockquote class="blockquote text-center">
+        <h1 class="display-2">{{titlecop}}</h1>
+    </blockquote>
+</header>
+<p></p>
+<div class="card">
+    <h5 class="card-header">PAZIENTE</h5>
+    <div class="card-body">
+        <h5 class="card-title">{{patient.name}} {{patient.surname}}</h5>
+        <p class="card-text">
+            DATA DI NASCITA {{patient.birthday}}
+        </p>
+        <footer class="blockquote-footer">{{patient.fiscalcode}}</footer>
+    </div>
+</div>
+<p></p>
+<app-exam-list *ngIf="examlist" (eventsaveorupdate)="modificaorsalva($event)"></app-exam-list>
+<app-exam *ngIf="!examlist" (newEvent) ="saveorback($event)"></app-exam>
+<p></p>
+<button type="submit" class="btn btn-secondary btn-lg btn-block" (click)="back()">torna indietro</button>
