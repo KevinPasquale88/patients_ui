@@ -18,10 +18,10 @@ export class PatientComponent implements OnInit {
   patient!: Patient;
 
   constructor(private searchsubmitService: SearchsubmitService, private route: ActivatedRoute, private router: Router, private searchExamService: SearchExamService) {
-    this.idpatient = this.route.snapshot.params['index'];
+    this.idpatient = this.route.snapshot.params['idpatient'];
     console.log(this.idpatient);
     for (var patient of this.searchsubmitService.getListOfPatients()) {
-      if (patient.idpatient === this.idpatient) {
+      if (patient.idpatients === this.idpatient) {
         this.patient = patient;
       }
     }

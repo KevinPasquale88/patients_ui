@@ -8,7 +8,7 @@ const routes: Routes = [
   { path: '', component: PatientSearchComponent },
   { path: 'searchpatient', component: PatientSearchComponent },
   { path: 'patientlist', component: PatientListComponent },
-  { path: 'patient/:index', component: PatientComponent }];
+  { path: 'patient/:idpatient', component: PatientComponent }];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

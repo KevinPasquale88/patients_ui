@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 
 export class Patient {
 
-  constructor(public idpatient: string, public name: string, public surname: string, public fiscalcode: string, public birthday: string) { }
+  constructor(public idpatients: string, public name: string, public surname: string, public fiscalcode: string, public birthday: string) { }
 }
 
 export class Exam {
