@@ -16,7 +16,7 @@ export class Exam {
 })
 export class SearchsubmitService {
   server = "localhost";
-  port = "8080";
+  port = "9090";
 
   storagelistpatient: Patient[] = [];
 
@@ -26,13 +26,13 @@ export class SearchsubmitService {
     console.log(name);
     console.log(surname);
     const params = new HttpParams().set('name', name).set('surname', surname);
-    return this.http.get<Patient[]>(`http://${this.server}:${this.port}/patintapi/getPatients`, { params });
+    return this.http.get<Patient[]>(`http://${this.server}:${this.port}/patientapi/getPatients`, { params });
   }
 
   getExamForIdPatient(idpatient: string) {
     console.log(idpatient);
     const params = new HttpParams().set('idpatient', idpatient);
-    return this.http.get<Exam[]>(`http://${this.server}:${this.port}/patintapi/getExams`, { params });
+    return this.http.get<Exam[]>(`http://${this.server}:${this.port}/patientapi/getExams`, { params });
   }
 
   setListOfPatients(storage: Patient[]) {

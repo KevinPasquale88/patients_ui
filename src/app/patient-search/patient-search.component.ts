@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SearchsubmitService } from '../services/searchsubmit.service';
-
-
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-patient-search',
@@ -11,26 +10,33 @@ import { SearchsubmitService } from '../services/searchsubmit.service';
 })
 export class PatientSearchComponent implements OnInit {
   titlecop = 'RICERCA PAZIENTE'
-  
-  name = '';
-  surname = '';
+
+  formGroup;
   noresult = false;
 
-  constructor(private route: Router, private searchsubmitService: SearchsubmitService) { }
+  constructor(private route: Router, private searchsubmitService: SearchsubmitService, private formBuilder: FormBuilder) {
+    this.formGroup = this.formBuilder.group({
+      name: '',
+      surname: ''
+    });
+  }
 
   ngOnInit(): void {
   }
 
-  onSubmit() {
-    this.searchsubmitService.searchPatient(this.name, this.surname).subscribe(response => {
+  onSubmit(formData: { [x: string]: any; }) {
+    console.log(formData);
+    var name = formData['name'];
+    var surname = formData['surname'];
+    this.searchsubmitService.searchPatient(name, surname).subscribe(response => {
       console.log(response);
       this.searchsubmitService.setListOfPatients(response);
-      if(response.length == 0){
+      if (response.length == 0) {
         this.noresult = true;
         this.ngOnInit();
-      }else{
+      } else {
         this.route.navigate(['patientlist']);
-      } 
+      }
     });
   }
 

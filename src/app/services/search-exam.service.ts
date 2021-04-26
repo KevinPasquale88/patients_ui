@@ -18,7 +18,7 @@ export class ExamComplete {
 })
 export class SearchExamService {
   server = "localhost";
-  port = "8080";
+  port = "9090";
   storagelistexam: Exam[] = [];
 
   examselected!: ExamComplete;
@@ -44,17 +44,17 @@ export class SearchExamService {
   getExam(idexam: string) {
     console.log(idexam);
     const params = new HttpParams().set('idexam', idexam);
-    return this.http.get<ExamComplete>(`http://${this.server}:${this.port}/patintapi/getExam`, { params });
+    return this.http.get<ExamComplete>(`http://${this.server}:${this.port}/patientapi/getExam`, { params });
   }
 
   saveExam(examsave: ExamComplete) {
     console.log(ExamComplete);
-    return this.http.post<ExamComplete>(`http://${this.server}:${this.port}/patintapi/saveExam`, examsave);
+    return this.http.post<ExamComplete>(`http://${this.server}:${this.port}/patientapi/saveExam`, examsave);
   }
 
   updateExam(examupdate: ExamComplete) {
     console.log(ExamComplete);
     const params = new HttpParams().set('idexam', examupdate.idexam);
-    return this.http.post<ExamComplete>(`http://${this.server}:${this.port}/patintapi/updateExam`, examupdate, { params });
+    return this.http.post<ExamComplete>(`http://${this.server}:${this.port}/patientapi/updateExam`, examupdate, { params });
   }
 }
