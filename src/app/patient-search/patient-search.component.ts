@@ -25,11 +25,9 @@ export class PatientSearchComponent implements OnInit {
   }
 
   onSubmit(formData: { [x: string]: any; }) {
-    console.log(formData);
     var name = formData['name'];
     var surname = formData['surname'];
     this.searchsubmitService.searchPatient(name, surname).subscribe(response => {
-      console.log(response);
       this.searchsubmitService.setListOfPatients(response);
       if (response.length == 0) {
         this.noresult = true;

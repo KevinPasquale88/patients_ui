@@ -1,17 +1,14 @@
-import { Time } from '@angular/common';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Exam } from './searchsubmit.service';
-
-export class Examfeedback {
-  constructor(public eventselected: string, public idexamselected: string) { }
-}
 
 export class ExamComplete {
 
-  constructor(public idexam: string, public dataexam: Date, public hourexam: Time, public justification: string, public typeexam: string, public anamnesis: string) { }
+  constructor(public idexams: string, public dateexam: Date, public hourexam: string, public justification: string, public examtype: string, public anamnesis: string, public idpatients: string) { }
 }
 
+export class ExamInfo {
+  constructor(public dateexam: Date, public hourexam: string, public justification: string, public examtype: string, public anamnesis: string, public idPatient: string) { }
+}
 
 @Injectable({
   providedIn: 'root'
@@ -19,42 +16,43 @@ export class ExamComplete {
 export class SearchExamService {
   server = "localhost";
   port = "9090";
-  storagelistexam: Exam[] = [];
+  storagelistexam: ExamComplete[] = [];
 
   examselected!: ExamComplete;
-
+  idpatient: string = '';
   constructor(private http: HttpClient) { }
 
-  setlistexamforpatient(exams: Exam[]) {
-    this.storagelistexam = exams;
+  setIdPatient(idpatient: string) {
+    this.idpatient = idpatient;
   }
 
-  getlistexamforpatient() {
-    return this.storagelistexam;
+  getIdPatient() {
+    return this.idpatient;
   }
 
-  setexamforpatient(exam: ExamComplete) {
-    this.examselected = exam;
+  clear() {
+    this.storagelistexam = [];
+    this.idpatient = '';
+    this.examselected = new ExamComplete('', new Date(), '', '', '', '', '');
   }
 
-  getexamforpatient() {
-    return this.examselected;
+  getExamForIdPatient(idpatient: string) {
+    console.log("getExamForIdPatient " +idpatient);
+    const params = new HttpParams().set('idpatient', idpatient);
+    return this.http.get<ExamComplete[]>(`http://${this.server}:${this.port}/patientapi/getExams`, { params });
   }
 
   getExam(idexam: string) {
-    console.log(idexam);
     const params = new HttpParams().set('idexam', idexam);
     return this.http.get<ExamComplete>(`http://${this.server}:${this.port}/patientapi/getExam`, { params });
   }
 
-  saveExam(examsave: ExamComplete) {
-    console.log(ExamComplete);
-    return this.http.post<ExamComplete>(`http://${this.server}:${this.port}/patientapi/saveExam`, examsave);
+  saveExam(examsave: ExamInfo) {
+    return this.http.post<ExamInfo>(`http://${this.server}:${this.port}/patientapi/saveExam`, examsave);
   }
 
-  updateExam(examupdate: ExamComplete) {
-    console.log(ExamComplete);
-    const params = new HttpParams().set('idexam', examupdate.idexam);
-    return this.http.post<ExamComplete>(`http://${this.server}:${this.port}/patientapi/updateExam`, examupdate, { params });
+  updateExam(examupdate: ExamInfo, idexam: string) {
+    const params = new HttpParams().set('idexam', idexam);
+    return this.http.post<ExamInfo>(`http://${this.server}:${this.port}/patientapi/updateExam`, examupdate, { params });
   }
 }

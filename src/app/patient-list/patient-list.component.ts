@@ -20,12 +20,11 @@ export class PatientListComponent implements OnInit {
   }
 
   selectPatient(patient: Patient) {
-    console.log(patient);
-    console.log(patient.idpatients);
     this.router.navigate(['patient', patient.idpatients]);
   }
 
   back() {
+    this.searchsubmitService.clear();
     this.router.navigate(['searchpatient']);
   }
 }

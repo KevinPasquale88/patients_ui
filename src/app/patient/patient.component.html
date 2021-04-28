@@ -15,7 +15,89 @@
     </div>
 </div>
 <p></p>
-<app-exam-list *ngIf="examlist" (eventsaveorupdate)="modificaorsalva($event)"></app-exam-list>
-<app-exam *ngIf="!examlist" (newEvent) ="saveorback($event)"></app-exam>
+<div class="btn-group btn-group-lg btn-group-justified" role="group" aria-label="Basic example">
+    <div class="btn-group">
+        <button type="submit" class="btn btn-success btn-lg btn-block" (click)="insert()">NUOVO ESAME</button>
+    </div>
+    <div class="btn-group">
+        <button type="submit" class="btn btn-info btn-lg btn-block" (click)="caricaListaEsami()">CARICA
+            ESAMI</button>
+    </div>
+    <div class="btn-group" *ngIf="examList.length > 0">
+        <button type="submit" class="btn btn-warning btn-lg btn-block" (click)="update()">MODIFICA ESAME</button>
+    </div>
+</div>
+<p></p>
+<p></p>
+<div *ngIf="visibleExamList">
+    <section>
+        <table *ngIf="examList.length > 0" class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col"><b>DATA</b></th>
+                    <th scope="col"><b>MOTIVO</b></th>
+                    <th scope="col"><b>TIPOLOGIA</b></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let exam of examList;let i=index">
+                    <td>{{exam.dateexam}}</td>
+                    <td>{{exam.justification}}</td>
+                    <td>{{exam.examtype}}</td>
+                    <td>
+                        <div class="radio">
+                            <input type="radio" id="{{exam.idexams}}" name="radio{{i}}" [(ngModel)]="radio_button_value"
+                                [value]="exam.idexams" />
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+</div>
+<section *ngIf="!visibleExamList">
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
+        <div class="form-group">
+            <label for="exampleFormDataExam" class="col-sm-2 col-form-label"><b>DATA ESAME</b></label>
+            <div class="col-sm">
+                <input type="date" class="form-control" id="exampleFormDataExam" formControlName="dataexam">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="exampleFormHourExam" class="col-sm-2 col-form-label"><b>ORA ESAME</b></label>
+            <div class="col-sm">
+                <input type="time" class="form-control" id="exampleFormHourExam" formControlName="hourexam">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="exampleFormTipologia" class="col-sm-2 col-form-label"><b>TIPOLOGIA</b></label>
+            <div class="col-sm">
+                <select class="form-control" id="exampleFormTipologia" formControlName="typeexam">
+                    <option>Ambulatoriale</option>
+                    <option>Domicialiare</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="exampleFormMotivo" class="col-sm-2 col-form-label"><b>MOTIVO</b></label>
+            <div class="col-sm">
+                <select class="form-control" id="exampleFormMotivo" formControlName="motivoexam">
+                    <option selected>Prima Visita</option>
+                    <option>Controllo</option>
+                    <option>Urgenza</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="exampleFormAnamnesi" class="col-sm-2 col-form-label"><b>ANAMNESI</b></label>
+            <div class="col-sm">
+                <textarea class="form-control" id="exampleFormAnamnesi" formControlName="anamnesi"></textarea>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg btn-block">SALVA</button>
+        <button type="submit" class="btn btn-danger btn-lg btn-block" (click)="delete()">CANCELLA</button>
+    </form>
+</section>
 <p></p>
 <button type="submit" class="btn btn-secondary btn-lg btn-block" (click)="back()">torna indietro</button>
