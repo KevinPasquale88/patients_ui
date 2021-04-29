@@ -3,7 +3,7 @@
         <h1 class="display-2">{{titlecop}}</h1>
     </blockquote>
 </header>
-<p></p>
+<br>
 <div class="card">
     <h5 class="card-header">PAZIENTE</h5>
     <div class="card-body">
@@ -15,26 +15,34 @@
     </div>
 </div>
 <p></p>
-<div class="btn-group btn-group-lg btn-group-justified" role="group" aria-label="Basic example">
-    <div class="btn-group">
-        <button type="submit" class="btn btn-success btn-lg btn-block" (click)="insert()">NUOVO ESAME</button>
+<div class="btn-group btn-group-lg" role="group">
+    <div class="btn-group float-sm-left" role="group">
+        <button type="submit" class="btn btn-success btn-lg btn-block float-sm-left" (click)="insert()">NUOVO
+            ESAME</button>
     </div>
-    <div class="btn-group">
-        <button type="submit" class="btn btn-info btn-lg btn-block" (click)="caricaListaEsami()">CARICA
+    <div class="btn-group float-sm-right" role="group">
+        <button type="submit" class="btn btn-success btn-lg btn-block float-sm-left"
+            (click)="caricaListaEsami()">STORICO
             ESAMI</button>
-    </div>
-    <div class="btn-group" *ngIf="examList.length > 0">
-        <button type="submit" class="btn btn-warning btn-lg btn-block" (click)="update()">MODIFICA ESAME</button>
     </div>
 </div>
 <p></p>
-<p></p>
-<div *ngIf="visibleExamList">
+<div *ngIf="errorsapi" class="alert alert-danger" role="alert">
+    <strong>Si è verificato un errore. Riprovate più tardi</strong>
+</div>
+<div *ngIf="messageok" class="alert alert-success" role="alert">
+    <strong>Operazione di {{state}} andata a buon fine. </strong>
+</div>
+<div *ngIf="!errorsapi && visibleExamList">
     <section>
+        <div *ngIf="examList.length < 1" class="alert alert-warning" role="alert">
+            Il paziente non ha esami registrati.
+        </div>
         <table *ngIf="examList.length > 0" class="table">
             <thead class="thead-dark">
                 <tr>
                     <th scope="col"><b>DATA</b></th>
+                    <th scope="col"><b>ORA</b></th>
                     <th scope="col"><b>MOTIVO</b></th>
                     <th scope="col"><b>TIPOLOGIA</b></th>
                     <th scope="col"></th>
@@ -43,12 +51,21 @@
             <tbody>
                 <tr *ngFor="let exam of examList;let i=index">
                     <td>{{exam.dateexam}}</td>
+                    <td>{{exam.hourexam}}</td>
                     <td>{{exam.justification}}</td>
                     <td>{{exam.examtype}}</td>
                     <td>
-                        <div class="radio">
-                            <input type="radio" id="{{exam.idexams}}" name="radio{{i}}" [(ngModel)]="radio_button_value"
-                                [value]="exam.idexams" />
+                        <div class="btn-group btn-group-lg" role="group">
+                            <div class="btn-group float-sm-left" role="group">
+                                <button type="submit" class="btn btn-warning btn-lg"
+                                    (click)="selectexamforupdate(exam.idexams)">MODIFICA
+                                    ESAME</button>
+                            </div>
+                            <div class="btn-group float-sm-left" role="group">
+                                <button type="submit" class="btn btn-danger btn-lg"
+                                    (click)="deleteexam(exam.idexams)">CANCELLA
+                                    ESAME</button>
+                            </div>
                         </div>
                     </td>
                 </tr>
@@ -56,18 +73,20 @@
         </table>
     </section>
 </div>
-<section *ngIf="!visibleExamList">
+<section *ngIf="!errorsapi && visibleFormSave">
     <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
         <div class="form-group">
             <label for="exampleFormDataExam" class="col-sm-2 col-form-label"><b>DATA ESAME</b></label>
             <div class="col-sm">
-                <input type="date" class="form-control" id="exampleFormDataExam" formControlName="dataexam">
+                <input type="date" class="form-control" id="exampleFormDataExam" formControlName="dataexam"
+                    value="exampCompleteToUpdate.dataexam">
             </div>
         </div>
         <div class="form-group">
             <label for="exampleFormHourExam" class="col-sm-2 col-form-label"><b>ORA ESAME</b></label>
             <div class="col-sm">
-                <input type="time" class="form-control" id="exampleFormHourExam" formControlName="hourexam">
+                <input type="time" class="form-control" id="exampleFormHourExam" formControlName="hourexam"
+                    value="exampCompleteToUpdate.hourexam">
             </div>
         </div>
         <div class="form-group">
@@ -75,7 +94,7 @@
             <div class="col-sm">
                 <select class="form-control" id="exampleFormTipologia" formControlName="typeexam">
                     <option>Ambulatoriale</option>
-                    <option>Domicialiare</option>
+                    <option>Domiciliare</option>
                 </select>
             </div>
         </div>
@@ -83,7 +102,7 @@
             <label for="exampleFormMotivo" class="col-sm-2 col-form-label"><b>MOTIVO</b></label>
             <div class="col-sm">
                 <select class="form-control" id="exampleFormMotivo" formControlName="motivoexam">
-                    <option selected>Prima Visita</option>
+                    <option>Prima Visita</option>
                     <option>Controllo</option>
                     <option>Urgenza</option>
                 </select>
@@ -96,8 +115,11 @@
             </div>
         </div>
         <button type="submit" class="btn btn-primary btn-lg btn-block">SALVA</button>
-        <button type="submit" class="btn btn-danger btn-lg btn-block" (click)="delete()">CANCELLA</button>
     </form>
+    <br />
+    <button type="submit" class="btn btn-secondary btn-lg btn-block" (click)="resetForm()">RESET FORM</button>
+    <button type="submit" class="btn btn-danger btn-lg btn-block" (click)="clear()">CANCELLA</button>
 </section>
 <p></p>
+<br>
 <button type="submit" class="btn btn-secondary btn-lg btn-block" (click)="back()">torna indietro</button>

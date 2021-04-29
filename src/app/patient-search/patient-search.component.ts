@@ -13,6 +13,7 @@ export class PatientSearchComponent implements OnInit {
 
   formGroup;
   noresult = false;
+  errorsapi = false;
 
   constructor(private route: Router, private searchsubmitService: SearchsubmitService, private formBuilder: FormBuilder) {
     this.formGroup = this.formBuilder.group({
@@ -22,6 +23,8 @@ export class PatientSearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.noresult = false;
+    this.errorsapi = false;
   }
 
   onSubmit(formData: { [x: string]: any; }) {
@@ -35,6 +38,9 @@ export class PatientSearchComponent implements OnInit {
       } else {
         this.route.navigate(['patientlist']);
       }
+    }, errors => {
+      console.log(errors);
+      this.errorsapi = true;
     });
   }
 

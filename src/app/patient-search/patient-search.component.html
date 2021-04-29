@@ -24,7 +24,11 @@
         <button type="submit" class="btn btn-secondary btn-lg btn-block">Submit</button>
     </form>
 
+    <br>
     <div *ngIf="noresult" class="alert alert-warning" role="alert">
         Non ci sono pazienti per i dati inseriti
+    </div>
+    <div *ngIf="errorsapi" class="alert alert-danger" role="alert">
+        <strong>Si è verificato un errore. Riprovate più tardi</strong>
     </div>
 </section>
