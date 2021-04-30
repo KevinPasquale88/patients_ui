@@ -1,4 +1,5 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, inject } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { SearchExamService } from './search-exam.service';
 
@@ -6,11 +7,18 @@ describe('SearchExamService', () => {
   let service: SearchExamService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [
+        HttpClientTestingModule,
+      ]
+    });
     service = TestBed.inject(SearchExamService);
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+  it('should get users', inject([HttpTestingController, SearchExamService],
+    (httpMock: HttpTestingController, apiService: SearchExamService) => {
+      expect(apiService).toBeTruthy();
+    }
+  )
+  );
 });
