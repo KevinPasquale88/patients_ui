@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl, PatternValidator, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Exam, ExamInfo, SearchExamService } from '../services/search-exam.service';
 import { Patient, SearchsubmitService } from '../services/searchsubmit.service';
@@ -26,6 +26,7 @@ export class PatientComponent implements OnInit {
   exampCompleteToUpdate!: Exam;
   formGroup;
 
+  errorsValidation: string = '';
 
   constructor(private searchsubmitService: SearchsubmitService, private route: ActivatedRoute, private router: Router, private searchExamService: SearchExamService, private formBuilder: FormBuilder) {
     this.searchsubmitService.setIdPatient(this.route.snapshot.params['idpatient']);
@@ -35,27 +36,27 @@ export class PatientComponent implements OnInit {
       hourexam: '',
       typeexam: '',
       motivoexam: '',
-      anamnesi: ''
+      anamnesi: '',
     });
   }
 
   ngOnInit(): void {
-  }
-
-  clear() {
-    if(this.state == 'Modifica'){
-      this.visibleExamList = true;
-    }else{
-      this.visibleExamList = false;
-    }
-    this.patient = this.searchsubmitService.getPatient() || new Patient('', '', '', '', '');
     this.formGroup = this.formBuilder.group({
       dataexam: '',
       hourexam: '',
       typeexam: '',
       motivoexam: '',
-      anamnesi: ''
+      anamnesi: '',
     });
+  }
+
+  clear() {
+    if (this.state == 'Modifica') {
+      this.visibleExamList = true;
+    } else {
+      this.visibleExamList = false;
+    }
+    this.patient = this.searchsubmitService.getPatient() || new Patient('', '', '', '', '');
     this.state = 'Salvataggio';
     this.errorsapi = false;
     this.visibleFormSave = false;
@@ -87,7 +88,7 @@ export class PatientComponent implements OnInit {
       hourexam: '',
       typeexam: '',
       motivoexam: '',
-      anamnesi: ''
+      anamnesi: '',
     });
   }
 
@@ -109,7 +110,7 @@ export class PatientComponent implements OnInit {
     }
   }
 
-  deleteexam(idexams: string){
+  deleteexam(idexams: string) {
     this.visibleExamList = false;
     this.visibleFormSave = false;
     this.state = 'Cancellazione';
@@ -130,31 +131,50 @@ export class PatientComponent implements OnInit {
     this.router.navigate(['searchpatient']);
   }
 
-  onSubmit(formData: any) {
-    if (this.state == 'Salvataggio') {
-      this.searchExamService.saveExam(new ExamInfo(formData['dataexam'], formData['hourexam'], formData['typeexam'], formData['motivoexam'], formData['anamnesi'], this.searchsubmitService.getIdPatient())).subscribe(response => {
-        if (response.result == 'OK') {
-          this.messageok = true;
-        } else {
-          this.errorsapi = true;
-        }
-      }, errors => {
-        console.log(errors);
+  salva(examInfo: ExamInfo) {
+    this.searchExamService.saveExam(examInfo).subscribe(response => {
+      if (response.result == 'OK') {
+        this.messageok = true;
+      } else {
         this.errorsapi = true;
-      });
-    } else {
-      this.searchExamService.updateExam(new ExamInfo(formData['dataexam'], formData['hourexam'], formData['typeexam'], formData['motivoexam'], formData['anamnesi'], this.searchsubmitService.getIdPatient()), this.exampCompleteToUpdate.idexams).subscribe(response => {
-        if (response.result == 'OK') {
-          this.messageok = true;
-        } else {
-          this.errorsapi = true;
-        }
-      }, errors => {
-        console.log(errors);
-        this.errorsapi = true;
-      });
-    }
+      }
+    }, errors => {
+      console.log(errors);
+      this.errorsapi = true;
+    });
     this.clear();
+  }
+
+  update(examInfo: ExamInfo) {
+    this.searchExamService.updateExam(examInfo, this.exampCompleteToUpdate.idexams).subscribe(response => {
+      if (response.result == 'OK') {
+        this.messageok = true;
+      } else {
+        this.errorsapi = true;
+      }
+    }, errors => {
+      console.log(errors);
+      this.errorsapi = true;
+    });
+    this.clear();
+
+  }
+
+  validateForm(formData: any) {
+    let typeexam:string = formData['typeexam'];
+    let motivoexam:string = formData['motivoexam'];
+    let anamnesi:string = formData['anamnesi'];
+    let dataexam:Date = formData['dataexam'];
+    if(!dataexam || anamnesi.length <= 0 || motivoexam.length <= 0 || typeexam.length <= 0){
+      this.errorsValidation = 'Attenzione ! Il campo * è obbligatorio.'
+    }
+    if(this.errorsValidation.length == 0){
+      if (this.state == 'Salvataggio') {
+        this.salva(new ExamInfo(dataexam, formData['hourexam'], typeexam, motivoexam, anamnesi, this.searchsubmitService.getIdPatient()));
+      } else {
+        this.update(new ExamInfo(dataexam, formData['hourexam'], typeexam, motivoexam, anamnesi, this.searchsubmitService.getIdPatient()));
+      }
+    }
   }
 
   resetForm() {
@@ -163,7 +183,7 @@ export class PatientComponent implements OnInit {
       hourexam: '',
       typeexam: '',
       motivoexam: '',
-      anamnesi: ''
+      anamnesi: '',
     });
   }
 }
