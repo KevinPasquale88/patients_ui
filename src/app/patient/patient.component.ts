@@ -161,6 +161,8 @@ export class PatientComponent implements OnInit {
   }
 
   validateForm(formData: any) {
+    console.log(formData);
+    this.errorsValidation = '';
     let typeexam:string = formData['typeexam'];
     let motivoexam:string = formData['motivoexam'];
     let anamnesi:string = formData['anamnesi'];

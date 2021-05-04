@@ -34,7 +34,6 @@ export class PatientSearchComponent implements OnInit {
       this.searchsubmitService.setListOfPatients(response);
       if (response.length == 0) {
         this.noresult = true;
-        this.ngOnInit();
       } else {
         this.route.navigate(['patientlist']);
       }
